@@ -3,7 +3,7 @@ import tkMessageBox
 from Tkinter import TclError
 
 url_base = "http://www.youtube.com/get_video_info?video_id="
-url_base = "http://www.youtube.com/get_video_info?el=vevo&el=embedded&video_id="
+#url_base = "http://www.youtube.com/get_video_info?el=vevo&el=embedded&video_id="
 
 def urlParserParameters(str,isu = 0):
     param = str.split("&")
@@ -20,12 +20,15 @@ def getURLS(id):
     stream_info = urllib2.urlopen(url_base+id).read()
     
     parameters = urlParserParameters(stream_info)
+
     if parameters["status"]=="fail" :
         return urllib.unquote(parameters["reason"]).decode('utf8')
     #formats =urllib.unquote(parameters["url_encoded_fmt_stream_map"]).decode('utf8').split(",")
     formats = urllib.unquote(parameters["url_encoded_fmt_stream_map"]).decode('utf8').split(",")
     #print urlParserParameters(urllib.unquote(formats[0]).decode('utf8').split(",")[0])
     #quit()
+    if "adaptive_fmts" in parameters:
+        formats = urllib.unquote(parameters["adaptive_fmts"]).decode('utf8').split(",")
     resultat = []
     resultat.append({})
     resultat.append([])
@@ -39,6 +42,7 @@ def getURLS(id):
             resultat[1][i][k]="%s"%urllib.unquote(v).decode('utf8')
 
         i+=1
+    print resultat[1][0]
     return resultat
 class Downloader():
     def __init__(self,file,url,progressB):

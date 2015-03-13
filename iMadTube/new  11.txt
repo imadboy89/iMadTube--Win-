@@ -1,1 +1,1 @@
-﻿pyinstaller.py -F -w  --upx-dir=./    --icon=yt/yt.ico
+﻿C:\Users\IMAD-ELKHOLTI\Desktop\folders\pyinstaller-2.0\pyinstaller.py -F -w  --upx-dir=./    --icon=C:\Users\IMAD-ELKHOLTI\Documents\GitHub\iMadTube--Win-\iMadTube\yt.ico C:\Users\IMAD-ELKHOLTI\Documents\GitHub\iMadTube--Win-\iMadTube\iMadTube.py

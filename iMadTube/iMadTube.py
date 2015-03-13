@@ -9,6 +9,7 @@ import ttk,D,threading
 from PIL import Image,ImageTk
 import icon_
 
+
 pattern = "v=([^\s&]+)"
 placeholder = "Enter the Video Link HERE !!!"
 qualities ={5 : 'Low Quality, 240p, FLV, 400x240',
@@ -61,7 +62,12 @@ class PDownloader():
         #self.status.set("success ! ");
         #self.chkbx = StringVar()
         self.pattern.set(placeholder)
-        self.pattern.set("https://www.youtube.com/watch?v=450p7goxZqg")
+        try:
+            if sys.argv[0].split(".")[-1]=="py":
+                self.pattern.set("https://www.youtube.com/watch?v=450p7goxZqg")
+        except Exception,e:
+            print e
+            pass
         
         
         self.patt_Etr = ttk.Entry(self.mf, width=50 ,textvariable=self.pattern)
@@ -131,10 +137,10 @@ class PDownloader():
             self.urls_units = []
             title = urls[0]["title"]
             ##print title
-
+            if u"s" in urls[1][0]:
+                print urls[1][0]["s"]
             #title_short = title[:50]
             row_var = 3
-            print self.title
                 
             self.title.set(title.replace("+"," "))
             
@@ -210,8 +216,11 @@ class PDownloader():
             th.start()
             
         except Exception,e:
-            self.log(e)
-            tkMessageBox.showinfo("Error while Downloading","%s"%e)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            msg = "%s;  %s; %s"(e,fname, exc_tb.tb_lineno)
+            self.log(msg)
+            tkMessageBox.showerror("Error while Downloading","%s"%e)
         #l.pack(side="top", fill="both", expand=True, padx=100, pady=100)
     def play_vid(self,filename):
         #try:
@@ -234,14 +243,18 @@ class PDownloader():
             self.Label_img.image = tk_image
         except Exception,e:
             print e
+    def generate_signature(self,s):
+        pass
     def log(self,msg):
         print msg
         try:
+
+            print msg
             with open("log","a") as f:
                 msg_ = "%s %s"%(datetime.datetime.today().strftime('[%Y-%m-%d %H:%M:%S]'),msg)
                 f.write(msg_)
                 f.write("\n")
-            print msg
+            
         except Exception,e:
             print e
     def __del__(self):
