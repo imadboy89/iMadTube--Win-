@@ -1,0 +1,1 @@
+﻿pyinstaller.py -F -w  --upx-dir=./    --icon=yt/yt.ico
