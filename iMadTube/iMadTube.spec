@@ -1,6 +1,6 @@
 # -*- mode: python -*-
 a = Analysis(['C:\\Users\\IMAD-ELKHOLTI\\Documents\\GitHub\\iMadTube--Win-\\iMadTube\\iMadTube.py'],
-             pathex=['C:\\Users\\IMAD-ELKHOLTI\\Documents\\GitHub\\iMadTube--Win-\\iMadTube'],
+             pathex=['C:\\Users\\IMAD-ELKHOLTI\\Documents\\GitHub\\iMadTube--Win-'],
              hiddenimports=[],
              hookspath=None)
 pyz = PYZ(a.pure)
