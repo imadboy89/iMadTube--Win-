@@ -1,4 +1,4 @@
-﻿# coding:utf-8
+# coding:utf-8
 # V 1
 # by Imad-kh
 import json,urllib2,urllib,webbrowser,os,tkFont,subprocess,datetime,cStringIO
@@ -54,8 +54,6 @@ class PDownloader():
         ##self.progress = ttk.Progressbar(self, orient="horizontal", length=200, mode="determinate")
         self.msg_tst = StringVar()
         self.radioVar = StringVar()
-        
-        
         self.pattern = StringVar()
         self.status = StringVar()
         self.title = StringVar()
@@ -138,6 +136,7 @@ class PDownloader():
             title = urls[0]["title"]
             ##print title
             if u"s" in urls[1][0]:
+                print urls[1][0]["url"]
                 print urls[1][0]["s"]
             #title_short = title[:50]
             row_var = 3
@@ -167,9 +166,16 @@ class PDownloader():
         #self.counter += 1
         #print "aa"
         try:
-            itag = re.findall("itag=([0-9]+)&",self.url_to_download)[0]
-            ext = qualities[int(itag)].split(", ")[2].lower().replace(" ","")
+            try:
+                itag = re.findall("itag=([0-9]+)&",self.url_to_download)[0]
+                ext = qualities[int(itag)].split(", ")[2].lower().replace(" ","")
+            except :
+                print self.url_to_download
+                ext="mp4"
             title = "%s.%s"%(self.title.get(),ext)
+            keepcharacters = (' ','.','_','-')
+            dont_keepcharacters = (' /','\\','*','?','"','<','>','|')
+            filename_tocreate = "".join(c for c in title if c not in dont_keepcharacters).rstrip()
             t = Toplevel()
             t.wm_title(title)
             t.protocol('WM_DELETE_WINDOW', lambda: self.OnDownloadClose(t,d))
@@ -187,7 +193,7 @@ class PDownloader():
             lbl_speed_downloaded_total = ttk.Label(t,textvariable=speed_downloaded_total)
             progress = ttk.Progressbar(t, orient="horizontal", length=500, mode="determinate")
                         
-            d = D.Downloader(title,self.url_to_download,progress)##
+            d = D.Downloader(filename_tocreate,self.url_to_download,progress)##
             d.set_txt_vars(speed_downloaded_total,filename)##
             self.downloads_windows_error[t]=d
             
@@ -218,7 +224,7 @@ class PDownloader():
         except Exception,e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            msg = "%s;  %s; %s"(e,fname, exc_tb.tb_lineno)
+            msg = "%s;  %s; %s"%(e,fname, exc_tb.tb_lineno)
             self.log(msg)
             tkMessageBox.showerror("Error while Downloading","%s"%e)
         #l.pack(side="top", fill="both", expand=True, padx=100, pady=100)
