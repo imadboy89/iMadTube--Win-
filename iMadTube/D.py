@@ -1,9 +1,9 @@
-﻿import urllib2,urllib,json,sys,time,os,sys
+import urllib2,urllib,json,sys,time,os,sys
 import tkMessageBox
 from Tkinter import TclError
 
 url_base = "http://www.youtube.com/get_video_info?video_id="
-#url_base = "http://www.youtube.com/get_video_info?el=vevo&el=embedded&video_id="
+url_base = "http://www.youtube.com/get_video_info?el=vevo&el=embedded&video_id="
 
 def urlParserParameters(str,isu = 0):
     param = str.split("&")
@@ -27,8 +27,8 @@ def getURLS(id):
     formats = urllib.unquote(parameters["url_encoded_fmt_stream_map"]).decode('utf8').split(",")
     #print urlParserParameters(urllib.unquote(formats[0]).decode('utf8').split(",")[0])
     #quit()
-    if "adaptive_fmts" in parameters:
-        formats = urllib.unquote(parameters["adaptive_fmts"]).decode('utf8').split(",")
+    ##if "adaptive_fmts" in parameters:
+    ##    formats = urllib.unquote(parameters["adaptive_fmts"]).decode('utf8').split(",")
     resultat = []
     resultat.append({})
     resultat.append([])
@@ -42,7 +42,7 @@ def getURLS(id):
             resultat[1][i][k]="%s"%urllib.unquote(v).decode('utf8')
 
         i+=1
-    print resultat[1][0]
+    #print resultat[1][0]
     return resultat
 class Downloader():
     def __init__(self,file,url,progressB):
@@ -68,6 +68,11 @@ class Downloader():
             self.file_name_count= self.file_name_count +1
             self.check_existence()
         else:
+            try:
+                with open(self.file_location, 'wb') as fp:
+            except:
+                keepcharacters = (' ','.','_','-')
+                self.file_location = "".join(c for c in title if c.isalnum() or c in keepcharacters).rstrip()
             self.filename.set(self.file_location)
     def cancel(self):
         self.to_cancel=1
@@ -96,7 +101,12 @@ class Downloader():
                 if self.to_pause==1 : 
                     time.sleep(1)
                     continue
-                chunk = req.read(self.CHUNK)
+                while True:
+                    try:
+                        chunk = req.read(self.CHUNK)
+                        break
+                    except:
+                        time.sleep(1)
                 if not chunk: break
                 fp.write(chunk)
                 self.process += self.CHUNK
@@ -119,7 +129,7 @@ class Downloader():
             #tkMessageBox.showinfo("Error while Downloading","%s"%e)
             print(e, fname, exc_tb.tb_lineno)
             self.error = str(e)
-            print self.url
+            #print self.url
             #raise (e, fname, exc_tb.tb_lineno)
         
             
